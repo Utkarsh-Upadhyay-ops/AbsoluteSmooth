@@ -1,0 +1,163 @@
+name: Build AbsoluteSmooth Android APK v2.0.0
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Generate AbsoluteSmooth v2.0.0 Project Files
+        shell: python
+        run: |
+          import base64, zlib
+          from pathlib import Path
+
+          Path("app/src/main/java/com/aiuhd/app").mkdir(parents=True, exist_ok=True)
+          Path("app/src/main/assets").mkdir(parents=True, exist_ok=True)
+
+          studio_b64 = "eNrVPe1y20hy//0UY96uCa5FiqRISZZMbSzJ3nWdvVaJci6pLZcMAiMSZxDAAaAonk9V+ZFK/qdSuapU5U8eIi9wb3JPku75AGYGA5Ky9y659doSgZ6enp6e/pqe4fPH5+/Orv7x4iWZ5fPw5NFz/EFCN5qOGjRqEC90s2zU8N30UwPfUtc/eUTI8znNXeLN3DSj+ajx/upV+7BBdstXkTuno8ZtQJdJnOaAJ45yGgHoMvDz2cint4FH2+zDDgmiIA/csJ15bkhHvU53h8zdu2C+mKuPFhlN2Wd3Ao+iWPaXB3lIT15Msjhc5HQ8j+N8Rsb5wg9i8ud/+ndy5iZni7w9zlchJS9ek/c/npMn7jw5Jr1+99XFmPx94NOYvIxmbuTR9PkuR4ioMy8NkpxkqTdqzPI8yY52dz0/6uRuEC6DyPeyrOPF8929zqDTO2icPN/lLVjjMIg+kZSGo0aSUhh/RD1gxCylNyWyG2BL1pnG8TSkbhIwbHJcD2if5W4eeLyxl8ZZFqfBNIhURJv73YXR9L+/cedBuBq9hulKj5bTWf53g273eAh/9+HvAfw97Haf+EGWhO5qlC3dpMGJzJC/2YzSXA6APcHfCPmOfCaT+K6dBb8PoukR/J76MJvw6JggLW3e7RFpso6bO6TtJklI29kqy+l8h5ziIN663ph9fgVNdkjmRlkbhCK4OSb3rJtJ7K+wJ9f7NE3jReS3vTiM0yPyq+4z+DM5JvLzzQD+DI9BzlJg1BHpHpP4lqY3Ybxs3x2RWeD7NJJoj47aSzr5FOQgfmkchhM3hV6Y8B6R/QTGMKMBsEp8qG3UzlOgTCMQSOnhf8O1zWaL+cRs1j+AP+6xZGXq+sEiOyLP4L+SiCBKFvnP+SqBxZjCoqaND+Qze0OI7AcYTd0UZf+IRHFEj8X7uudyrEPoRjyy0yBfWqgWr+JFDvOq4a+lW2FMGGBvgitfORoxi739kmA5QPXZ9iPsdunw5ka+8hZphgKXxAEKto7uiPSTOwJ6K/ALCS0AYLHMXD9egmzCn0MATKcT1wFF2O8/g3+Gwx3S7QyHLZVvHVAVoJHbnpv6IDAgb1EGujUGCXfDEOB7+xmhbkaPLQ06rpcHt7RgqRhzsYS0galjxjkEMZ0id0DJO729oU+nO1aCe4OWeNHrD3bI8BDe7B2IN6264fcGNePvHSrjB/XLVc7zXW6onjOFIGzYPIjaM1xVlEbkJqR37B8cHplM2z+LCfhAcnqXt0FNee1et0syGoLebaPIgAHETh632+QqTnS7IuzNKWiGdptpP6SAprJz1l8AqitrexQlgfx2keXBzao9ofkSKUru2nskmx/BzyFJVu1+Z8jp4vrhQ6Ez5S+MRFDGu4dAJaj/TyuSx0m7S37f3us2uN597ge39SRM3YR1g5xZtmUbvdWyfUhm8JdNNfXb4RSpklPdzuP2JCU3aTxveys3aoOxACrat0EcglSBySD1Ixcfmf4HnqfuJA59hf3Phl3+KZuTbJaCAVBoJOTFWJK7C/TaaM/TReS5OVUaaQzBjss+sZf5Eft1AiuEMGUN1qqdozogYCh9/ISSQGp4qXSE9i9xI8MvAQnFhyaUpIibHSQjiHBRtSdhDAaD0fRzr5vcfeDcyug8YIQvQKulnkbtEpUjSlOvw+QIdIScPJw5Nktgznd7Q46XPdiDieJiVax6CYeyxKXbJF7jO3xMSOCDHxAvUo++BSfwjTuhYeFCikH0cBDlHDN5EdNE5jlSC92BdwZr6pzO0YP7b/DTDrt/+uNBv0v+/C//Rvp/+iPz4fgb9OCe7yYnVVkQv267Dqoi9jzEAQDHU/RkwUd8FYT0NVqmYlBcvbeFdudrGHjeK3kuFoxcrGSGbsaRfHLQFSJ+l/GZnVMwMHNDB+kzUzYstLsid29i1+cebcERNoxiUMy0spkyx8TN7Q08aBDX82iSC5jd7xq6hDIPTyKcLPI8jhhGL4wX/tvYd8PTPJII+fsCA/CozyXzF+TS3jZcIpXlZReFHsrgI+sCXYKczOCvJPtmETLrQec0dUMfxbnBOEEjcCvpeZyzoEBfNgxhCXTq+lN6BUNpnLyJIbwhttX2fJez0cp2eodB1lqW79WxXNXkFkUu1YCYkfL9XvFMQg3kLBXK21CwMHtSwTKNjuYdqRC/FRqnXyPaL9kwKwzRlj23/DQtTfVbFwKh38TpJ2CnR6V1nuNTRSG0e4ZLEE6P2O9pvCwjAyH9Uqkg+jMuNzyGvEgphrzkKWFhjPCnTimoELr74gYBx0kY5IIKlAVwLlA015Gy3m0QXkN7qHsxEJO52HupzZDaMQSKi4zsggPjZjm4KxBVpgU1Qk+iSOX4nr821j6ZT2AB2DSdXAx8/ustyqBczaUF6qOvJUUCF02pvCWn3ejWzYDTPKdgo1rmG85A8GCCFdolO8iSkzl378DlGdyFxM0SdPCYokPqJyHGaHJMAGDMvk3PHJbE96HFJpdH1S4eHxVSn3Dp4eNslCqHETzjP+LJb5Fajw+QMP8AucXRFAwTLOOSB9PNZY8Z5ExhnG4YhRVr01ugMuOOjivcF+Za7oETdJPjxN+hCFR8C8a63f0hCw78FFpMwkX6Je7LOs2+nAFrd3tdzdl6xxIebljrnDxsnCm6fPUDVVXVLzPWdV7YQHhhFa8RhYbrmAsWxTFL0jgROS7VP7I6brqsnKfudIqpNaGizoNbRl5FWpiThyBvYIU1tmYqDg0U9hx+WTJ+Sj4OysXzc/e6e43MuxbR5ocGYSHdqIGSd0SG3W+PdUYo86p119vtkzYzI7DwaXtlPrhjD5btA1hZBxUVVmfQNsUympdSxjSKYlNoJ+TP//rP6lgMkbXN0o9cB42Zky0zlyG4H1GuzxTXZ6VDzkArbhwm8TLuDJE5sM4nYQyhrZJDBLbCXK7m8SJDPcPQGs62qqSvkMFMPT8RcoS6OI01taPHl4Y+nuO60w0g988twbAtFFY0N49umXXcq4sBrR7gni5jiquFDLtwFxmt97aW7WcgU8+2d223kypwmQx/iinCImxRfSbipoHbZn7/qHEBJJM4JYxsUwD/6z/hf00GDT/TxrCKh8K8ZgO1EmjkwZyiiI29dDGZoFVWM3uYfhg1wG8GGRg1IN6BX2/dcEHZQ01MRGa5nrKKe1QfdfJAIo5ig25VuSLhZ4s0hWngwexJt3vU7Xa61Theb3iTZJfgh8aL3BIES13fOLly0ynFTCPYEdyJQJUtwttNPSBp54vUxflWaDu002aolqpy0aU8j6fTkJ7F88RN6V8mlBNzYg/n+vXhnE3c9bEytXNE3v1kFeu12pVrrHG4wfAJlXYZLxsb9AhJclgsYgx5RV0d2Kz6xnxJmagQM8TptuSWyiXI6OYD27D6isU37Db0RW+svlIWGfILL9+Q8Cl8nGLpEdSV7B1zuBonYN/XZpm09I6IndRo7JKl6nbJKXM19BTt64h5+qAJzzGpVoRgbgZcMcwRRH9A2r41AZvjW/k7CGL5KbTZI11TVpNMSHZJ2hU4MTWWcpoGPsF/EFEGslWXENa9EOmAqgZQXeruhDuP2Zp1voLebG5qG0NBw1VVI8Ddob5ORU+W1ahT9MJHPb4NQcWiELkIiwpRiWTE4JIBd0klDFxm3udG0l5uyrX80qS9W+SwiE26bK6XO2HOFiJ4kVK3RoyS9oAII15Etqu2u8hjwjIk8GHQMBXj1YtT0jsiYv7sqhFWLQ0FRMEOibKv5dRYslhVEzIVIHmGpjEhLum1vTCAxSoWMosFCN+yAi+f5IsIHSA3TSKaZTvkx/NL0GfgvbIAOXWzfIe4kS83+jOWg4fIq6NkjPUxMNQ/wCJr1Cy7Pq738mNPbqIUKYu1Bgb52D8ihbgJW7OOoxzQTMKoU6WP40scJGD/fGLkPetMUhGVK6a7iDnHci42uS9gYwpYu3ekOmgHw2+38mp0k8dYq/SyxuwNS7N3MFzvdFo8p/8zrqO8v2XyfibkfQu+S9DNbO/1Dr+Y72UvVbYfFnw/KPkOnf3tMP4M98Qh/J6wioJthN3NhbO+Ddu/QtyVftbI+6HK978hgT9lfiIuZ/ImuNlG2ssWWzC+u/fFjFf7WSfxewrnu3t/O5x/l+QBbk69jdl+xWlII38L9nNwBr2Z/3tfLvdaP/WCr+ibvYeLveIJMj9hk5sqggks5vilNjr7D9wOxv8upbs0ZrUs1Bd+3MPjY3Rf9iC0Zi4peULOcL+X/HDxHlDnOThW6xwZ7jl/sSPDN+NFY6UuYu2eMO5VyTQLeZW6c0ousdLAGS8S3IxjDmHL2CLfIvTi1R4y1XMRhGFWXVlCXHTR8N3cbUObUWNfia+TrJ0EFlGxRnKaANUJg8qGxsk+yy9VZ3k7Sp/9FSl99lWUgqP/FaRq2zrWfRhiJPBE4s5O7jZJt19UztEJT1jFNOEi/1WCzRA9WLR5wXajV0aA+OAvKzO9P/2R/MS2d79AbgTB/a8i+OGSU6R5v5TgwV+TwwOgdvDrrxLzMv+wp+7RqNmiZ93azXWZRmhs8H7W1Ups4ftUWKVZ3sbJBU3nYMuiXDF97y/frHOE9Gxot5LO5a5VHLnhtr5PsjlFLIsVsezhjvqVkV9AZEaJS5JiPD8uplNoQV5hkcwY2b1DWCXXDu4dQbzjTsgPWCsU44DRm4hvbkIsNptR93ZFUEIuqRu2X44vf3jxE3lKLl+/eklScMhoiikX8gbgKJmEbvQJm/M3xA9S8EnCFQmi9iSNlxlNOwYHklrfj9WbvYx8tvmsVbEt0pDtbnp0BtNI0/LowypepG0mT53ZTYf9UnHYNu1r4F7wuoWjpbN6zMn1FtmRqRJE+TsvLq5sbSneZgacYwL3Pg23cTd/mcq6mpqEzQ4nIWOcar5E5PQYk1rVJBa1gT4ndxvBZY2nKcZ9qoOpuJi8Bk5CncZ3pqNZr3fqK1+31zs1UdeavUVOMC/IYtV/68IjEYRdytUkM5pgQTqdzqY4TPDGy7V+yl0YQ9l3t47Cqvv4tuLIQvaqdXQGxTWT6So1aAXWDYWLogJ9qMlpGw9B+CJB0mZZP1FeIo6BsPIS20hrbNzmTSq2u8QrE7HmkNcllqfECHFuFhGvAXRaxdELL44ykPnLl+OXV2MyIj8XPX1WiAj8I9L03MRb5NducL2Y+c0d5TWewQMAnjsXJ980gNydwnv0RMpaIQ3Ap5mHGNIgSwj1p5TgSTSYxdUOmbgh5r58lnRP4qQm067hK1L1R+RguENkkv6I9HqHeJ5L5q7wAbyfFDkVeNDd2yHzMso/InsAAT4+2z2HxugEHZF+0dv9zkaeDT5dp5SG2fXMT22cG/waTBpWzMEQv4hxFzC1s5WxJcH4dMtShzk/j4Yl5qKnJ2Q8A9HPavn2TOfbXt/gW//Q5NvQ5Fv3a/nmRsGcXvfvrgEDYLKx7gWCsFoGHmN/mdyBGxOx00WcAzRC1cfZdwuBi4eBEjIwI24u8NQy7tAQuIHJuIHJuL7BuMFXMA7GMHevJ8s1LDtjMOT0yW++iFk/AumljKFe92agFCm5CcI5cWmWz2geeGQZ5DOSBeGnlRhdvah1dVHb1znW1fn17Nkvtz7zOHF/f52kcU4XGSxTG7uuEAbdAoRZw7H9Oob9xMYC9oDicV7QbFke87ExHoFzxgyWkDxQdDM3jOsX5r7OrV7XkK9uRaF1DYb1pXztP5RfixC6veZKV0jYdRyFKxvfLhYptYkR51pvo5y95SezSSwSwnwIpcbHpRjxWmtgKRZkrpOxPZ1rXXNVdgebuDa0rcpeyTbx24fjR5ptxSPTFCxryUu1kvb1OsuqW7HisW7NSmjDqhUvTOtWvDBXUfGiGGaJXEiJ8gRrcV5GWMgLrfN0QY13l0jLER4dLV9gVSM7l63Dz9zsPcRjrHT0iNy4Yaa89Ok8vgpQpLr6w/NiuIcd5VWQcU+e9WPg8kRsA0xviof3xXzl6UqZJTZvHdkAJjDEMzNjXLpT2pnC1OV07jRlLbBYEwz+GoLCZov84Q/Qizxoek88N/dmxLkG5+teFxFRmj8iPkRvWGGL6EWx7enqte80tYr9ZnF6VTTP76AtR4ItWW3GXe40+yBM7Px4GGKR4KuU/m4BKPH4O/Kf3BuIINDmp1axyF0lBx4CMwRFTtOzkgGtz/I70VRD9csQ9TKafSFNvKWK6MEUaVh5yfOa6VIqoU2KioL2te0lkLW1KBvc1J6DWTHIErqNOCSgFUtZnbgRTwlqYjIrQNehMmFNXGrN9NrVpMBV6DFKiNfSY8DacKlVvZtwqbA2XFoZ7iZkGrCJzSgbXofLAK1Ign4Kd/OqKEBNTJUDJutwVYCrclWcK1svUgVYs1zmRaSczeIlO8HmzLNpS7EOSrsOahFZDzciAHhsBWOJhTdBlndSMF631Gny7ERJOdon6qZo7IDdTtF55xonNFXgzFfQLzBCNoT4fnRS07fr+2XHO2Rvv9st8N5Xxg/x4txleJ2MeioDxOxDx2/dfNaZu3d4YwICHRsw8yAqwG7COE4dPBe4360AAlsADt5+i287efwquKO+02t1Etcf526aO+CkNbsqw1IKTk9ExjkmqxzsSoHuc2jylDSPmvAvdFAZ6u4u4ckusVdNztzUz3S1UtTqbTDRAqqkr+Ajz0GLmkVH5WPZrBPgVP149fYNdFM6DkRmZzowGS9db+Y4CZtf1TmXfkTqrzGRPBOqco+wJh1M8mKfAqDynknPT7inPSIf1Ys/WD4PD0xVkp480fnNZy25xV0q3f0lo9GIJB3g7fdErOomAffM3JhRt2/2zewyPGwqPd1/rAxB5e3HL9/ZESeEsMRl/SaPZXNHP5Wspe0bJ998TjoYN90/cIenzK3WXsSgV2uXG4PYJcRi93+B3aAsWkx5BxjL3Rs7K9XZAaX0Eo/zoYaCCDgFdw6rccEt46oMr2hacYlxUFZamgwrSwgv34n8s1kQ+g5iVuDu16g5FT9gr6i5BKSmWIVB5DvOHaPrDuUWBRgbgbsvYH7ufjh+tF7omcibQEW8x94Xn0ywIveCUPJDBVcRDXJkxUcTsIwOGWD50QRUokUGqXw2QcFnYCDws0IXqxpgJOFvyutV5L1/7Wi6XVOaFuvnfHwBMxeAnBfrhzj4K8N9r9zfgQ+BmvtXF+PWx5bNCuCBCN2DwBMSWkacTPIIk0bqSQaQUVZ0BM/VuvSmlkYpGxaVXGY7/qKuWXEYwGzGXzTV7IPMskyy0mLkhsWos2J5B7psbVyPn7V0jtoRxMDgqJgwkqWTNQaUtWTdH1taJhtbMnZY2waZqMuCGFB2wlYtG63eIlFcJR5uFN7SDnksMRndTCyNNGULbR/Q1Ni9fWBj7VDMw9pqyvyB460eLqlFcG/XyqX7DatRHld4QlhhkB5y6PX2a0MOHbQSvGgV5JsRSUg7nrGqcjeRVMDacZ2qWnkDrhLWjuutprg3IFOArQGR0NJqokzncYeVvWJAotu0Y6OB5KUBb7FnBsPMDmyWzeCL0cRq48zRG200a7dRjzbVYyfNlhEifvzms8Gc+28Vp2gd0lIC63BKBm6NUhXFWkILmK3RqlJZh7aciK3RavJZh1eZLIbYdOd4pLfBp7M5bormqmQgqsSIfr4XHTIHBWObM7D08bx5LzyTwmdC70Rhg5F5MfHLM90qguJwdzFxiiP00Sa4v1vQdMXrteP0RRg6zY6sZwX+FnYd7bI96BR3D43IT4v5BFwFgOxg+SAOGDC1FF5q7iBB70YPLR9aSMuDTOXeLSPeFKRBYGmtnKwpmeThZ6VysaZksS7uVI3cOmaXNZVfz26GS2W44WJbWP7wks7/70w31vqy0ODqJhOQx5L4Hfbvb7Amh7Cahq6ZlJpt0f5Hdo8rIDjoV9qzumjQEjfBXR2mJl6lBzHMWRgkjA/KtYRKMsZIn1bVjdKVVC1LWPrffJ7ds/sMbTphrQoqwiPTxFfjA1YqifEB5XJriWiFwIKeZIqL29fWcRn4KWvGcBG27k8JjR/eneJibD9A1ed7eJeKi7J1l1rA/vAuVRdn6z712P8hndbacv1gU7P1oCSQ1TaXi//rrRsqyo1RsJbtqDF/dq5Y+PMVtuEhxMr8S635qCe4jM70gtviTJa+K10pmV4XfFShlVim8s6MGcQmfSXtvkhgbLygmbloTjW1N9m002TcndmsbFv4cb65/XmstQxuiKPT3tJs/cTiUDbLkwBvgugT9bVEPVChWfZm3Q2iRVpBMZuEhhndTIB6a+iXda5cX6r2/0j/WZ226sq2CpC8Ebb5kBRW/d6gmndrdVh7R9usq8glK793bKumPuzWS+4fRLooR3Bx27VulXTyNJhr2VOzsAXAlB1LLILRa12yjbUuO4gD9YVe5CJx2uazmsvFYXyvSjmV+gVZ5He4a7QMoANwlvKYcHE85Wc5hFh2mnUJJXFHHNYOBBnoBnld3COlZIlnnbYwi2ZSu6h3qrWOZBdLyo71EilZXlH15fTWWnRcFId0WEl5h+2/rW+ksMKsoXiAtCljFXVf0O3j6lN1+9voTB+nBSEIQHGtFp9w8enVq6aNBeuytVX0LQNFWZbypYh0IWM34O3yC/CwwlrUhTwqi99k2cmD2S4q50qOiwfHWm1dgd7GaIkCeMyv42MM/vN//E/TZpjUIEU3TiWMwNgSwRB+dEBRog4QRQif77XUL7MzAhhJVTXBvUVYjQKbh6xMUVOwxaLsbho+efJEEC2PdOgM4e88Xr2DxRLQIe/4O6PdWpvLO5bljgqO8sV5FY9VENnl7Ei/dkN7fV5Nu6DdboJmeMtBPaPxNncguWAwfs6QcfoTbWsUuf0YH7dEHYfpWi2YfXp/+UaUMrxjlxLDZ4e1KsE5l7PUA/BFGpov4ihkITZ+YxR6u1hmUsmvWOZ9xAoAjytA5WI0369ZhHLRqeCVQi2jjVJ/owsS7jZ3taW17RKs7rNqG6oiF/HNZ+RwuaVqZktYXqGSArlX9lZZZa3VEq8icUKAnSQ451Xx7DsYxh4IG3GAfT5ZzmhEolgUWy4SPoNkRfOW6eb7qbvE9uzeBYeL21l+t0OWO2S2Q/Kq149nunD2JKiQrzfs+2V+kF8v093BsweIRBkVNsX1wW7mARcpQbDmr7o3vYO+21wP2BkiaI/2JoPJetAew8muWFcBS4JhekJ+3eCINa+DuYQFow+kAESDRVN2ISBm7NgRfVagZUGVgZ38RGWHTfYNOcP9HdI7xK/IGRziV+T0+62mjQzU4DzFNiK9Tl9JcMcpcUKakwDetA+P4efzEcGfT5+2jE1miWxCIZy6cPOZLsElAJbWXcXOEnR7nzwFlN8RPHEzg5/A//2aVkij0aqHx3BmNfCcHzbzpdYts00GJwdkg2GLfEv29i2DXwGMpA665u2O4fFzMsMfT0fQ7mvZAUNZbRh6PYRtsKoUia/Ci9NJgHkAElEsecPfnshTG/DO4I+H+dAlHzcMm5UHenHGuNXrDFrww+Gv+4NKzO2VTBv0ZessiFjrfqfHWvP3vWprIOYHuwK4hJXvhoUCABrbBA/YQH/8FxB57w4/w699BbFAaVEM+wf08OZZcyNsZ8iUQ7d/OPAONoIz/bDX69PD3mb9IDDYwKzyU752U8+R48XlDiNirL54jXyu7dgx1Aw/1ynOP6G84cY+WroNhHM9g9/AJf92O8/sSgZ3KbAF7hX08dvO2BdjqN/d16yj9oqdAnhxOn735v3Vy/Hbd++ufpTnS89fvn0HTg8edhzsb2Q0p7cH6rC3v7fTOxwAvYfD9QTjweHe3hcQjPfoE7CkBDM6PJ4RKV4MjsWJEfk9lJR/6SS7vh1T/sxBdCP8zrIgQXh+EloM9aBrLZF6hZn1vbs98j5iiX2QhewT+TVNI/7tRcRj8yy7xMSa0q+16E5gcoL59Bwcsx3izuNFpFls9BL5U7QO3U63L91FIlodW/Z8xKsOO29t29SRAPxL+EwI7kpKGN/SScwSmhGw+H0Q5YdnoTtPqP8iTcEBg9YQlkfTfFbRPaBL2QtoKwaFSupZjV3oCTuA2gd+Nc1iAXvHYe8Adslh70zYohrKR2BnBf3i98fcoaoc6PU9BVrkQfcYfjwne/CjirLQx7xadoR8+xl7eEq8D8dWUPbtFUCA8ZKwpo7DFG1LI44hI09rGzx9UAM5cIfp9taDGjzVGhjgLW6shvZhC+WnlMu3caXxT2C48IPgYpvxqNUyEYHEFbzFhB+HfipRf1fIlt7w/pEdyR4iAZ2qlWZZ3Bl1EWAu0AEU1Qp8YykWagPFKAS9ccUqQmnKIhrQCJ0oXjp1hfJvYjBxAFB13P28YCEwDaw7BKQACDzjnciQXiGw6B3gFLNUyWJgsPp4U+6jEqM7xhOYjhxdvfUxu0VhHQ4HNjU1ODTSE+KcH9Nr5PEIfSiIBcVTrszY45lOuNYMGh1X34nG0FR9qZ/ks7bXQTagwdN367EghA2J7nSC+VsW38ZDbjD02zqNA76evxqzg7knsAZ0TpXnGDsYWL6eu1MRfTP/pxoR8v7WJYgsmSy5g8VkmW2TOE41j7RbyTt9Z4q3xK4eHtuURVC6aNUs/2p6So+ySy7JMFtfCC0zzbFx9MZC2rUsIevwtx98LYUWyRLf0u1zyeKXGZyNxwS8FX+JX4UAjhhXv7G4VYsshFck9HHiZtkjXahQsnEzQ3W2yzcC44h8lGUMTrWoryXPeVPHVpzXUk57O7Yyu9ZHW9eloGtruUbgy3b8LgOq+fvl4iurP07IsGUpZmK8PecJuRIpnq1GWvCFU7PiNOexQLNTKTth1qB1XFne2E+yUPpRcGCXtcKBmxlxht+HY3znGduoKBU4hpR4mK+af7HwSd1ZsLCJvf8Hfbksi7xwuflU0Umi4QmMx/QFgb4Nk84bs6VtPKjRGVqf4Ihu2SdMRYkb2QTGXOm77s32imtdv9aZUWacnQXPcrxlhq0wrvxKL6VlP1AI2uB11JZbk+JmsUWGXsZb6gcuSAWrb9uUmKfK/vP2O0alZCl3IVRz7A/e+NY6wEOD8Y30HTw3AeR0DB6oO2f+R1P6dE30TwS0NnhWqNjEAoEbsA1+0/C0ipx0k1vvlDVDFgYZ+HKwLBYJEgk6OoggEIan8l4//YyjOW5leitcqqT0ZcVwcd3b2loP8264arVIUt419gBMbtq0RJLyRrfNiMrb3ywU8evatqCGA6oYFL6sPd9sdMnxvUoy1Zlnl9HIgqrWMS4kuYB0sQFZy/BrRwNQmCu8BWYf76GxxNnuvLwXQxNQpyDAclqZufVajyAgVyC/YylvYsNsd0kn82Mv9qmXjW6TZyDA35OaV7jTWr5pVo8+yyXBMgpa7w4fCl5RgcQhJUfstx3uHJ4GeXZB0zGA4z0uvf41eEj4V6tBFnH6bBF9YqfaPhyrSk6MExCABXRvwX1hX9AI4Q29rWyU4eqntyweZBt8tyI0DH5PuanhvYB9zWYSUN8WsvUMjkRi3ZeTaYN4IrhzCr86vA9kSs4YonKX6DtewteIRMmz/kXp19JJ0osJ76/Volj420HMH00DuwwiP152XkR+Ggf+aRpgzgt4ItSd7TVzAMX2oqYm7emalH3LsBg5btFesgeOEQFwMLnRyao0HcsxPLKBJEccpBfogBmLMOcX2bR2OAuNju+tdOCPFxm6U7hZi3Onm+uqkd685VvBUpTErznz7jaNJm5nltIbc5uYvwHGMP5h1IBD1d8XXUxif6WdNHYrfVRqxfhjoRhr/SebOWI3GJlb0FyXmxvMws/wYiwfz+ljdjsqK5U6FyPLOtr2s1D9Jh5wmb/V4Uo7JIqOZARfhVXsdhFD8T1crnSp/7hZow1EikcEM28ze8F8pRgDtG5hRHrDLl7cZQCIqJHg1Xqbyz02F3d0H77xfv9ouxKCQiNm/AoLFr1ULX+ar0unqZfGiLtB2O4ChN1OnYKlIZhVVtJVQYtuN3ZZVaogQKoJx6v51JBe4txVJlXE8OYR/joBw2NUnn6YrU5uraC1q+VjecdtjQkgju3ERKvT6VTsgBzoyUgbqaHgMB4s5sG80sWY/DipUxP3O7g5ZatAqzkwb1Z8bBnT3Ld4k+e78hbZ57uo+vDnLJ+HJ4/+F01dwZU="
+          Path("app/src/main/assets/studio.html").write_text(
+              zlib.decompress(base64.b64decode(studio_b64)).decode("utf-8"),
+              encoding="utf-8"
+          )
+
+          Path("settings.gradle").write_text(
+              'pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }\n'
+              'dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }\n'
+              'rootProject.name = "AbsoluteSmooth"\ninclude(":app")\n'
+          )
+          Path("build.gradle").write_text(
+              'plugins {\n'
+              '  id "com.android.application" version "8.2.2" apply false\n'
+              '  id "org.jetbrains.kotlin.android" version "1.9.22" apply false\n'
+              '}\n'
+          )
+          Path("gradle.properties").write_text("org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=false\n")
+          Path("app/build.gradle").write_text(
+              'plugins { id "com.android.application"; id "org.jetbrains.kotlin.android" }\n'
+              'android {\n'
+              '  namespace "com.aiuhd.app"\n'
+              '  compileSdk 34\n'
+              '  defaultConfig { applicationId "com.aiuhd.app"; minSdk 24; targetSdk 34; versionCode 2; versionName "2.0.0" }\n'
+              '  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }\n'
+              '  kotlinOptions { jvmTarget = "17" }\n'
+              '}\n'
+          )
+          Path("app/src/main/AndroidManifest.xml").write_text(
+              '<?xml version="1.0" encoding="utf-8"?>\n'
+              '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n'
+              '  <uses-permission android:name="android.permission.INTERNET"/>\n'
+              '  <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>\n'
+              '  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>\n'
+              '  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29"/>\n'
+              '  <application android:label="AbsoluteSmooth" android:usesCleartextTraffic="true" android:hardwareAccelerated="true" android:theme="@android:style/Theme.DeviceDefault.NoActionBar">\n'
+              '    <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">\n'
+              '      <intent-filter>\n'
+              '        <action android:name="android.intent.action.MAIN"/>\n'
+              '        <category android:name="android.intent.category.LAUNCHER"/>\n'
+              '      </intent-filter>\n'
+              '    </activity>\n'
+              '  </application>\n'
+              '</manifest>\n'
+          )
+          Path("app/src/main/java/com/aiuhd/app/MainActivity.kt").write_text(
+              'package com.aiuhd.app\n'
+              'import android.annotation.SuppressLint\n'
+              'import android.app.*\n'
+              'import android.content.*\n'
+              'import android.media.MediaScannerConnection\n'
+              'import android.net.Uri\n'
+              'import android.os.*\n'
+              'import android.util.Base64\n'
+              'import android.view.*\n'
+              'import android.webkit.*\n'
+              'import android.widget.*\n'
+              'import java.io.File\n'
+              'class MainActivity : Activity() {\n'
+              '  private lateinit var wv: WebView\n'
+              '  private var uploadCb: ValueCallback<Array<Uri>>? = null\n'
+              '  inner class AndroidBridge {\n'
+              '    @JavascriptInterface\n'
+              '    fun saveVideo(dataUrl: String, fileName: String) {\n'
+              '      try {\n'
+              '        val b64 = dataUrl.substringAfter("base64,", "")\n'
+              '        if (b64.isEmpty()) return\n'
+              '        val bytes = Base64.decode(b64, Base64.DEFAULT)\n'
+              '        val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "AbsoluteSmooth")\n'
+              '        if (!dir.exists()) dir.mkdirs()\n'
+              '        val outFile = File(dir, fileName)\n'
+              '        outFile.writeBytes(bytes)\n'
+              '        MediaScannerConnection.scanFile(this@MainActivity, arrayOf(outFile.absolutePath), arrayOf("video/webm"), null)\n'
+              '        runOnUiThread { Toast.makeText(this@MainActivity, "Saved to Movies/AbsoluteSmooth/$fileName", Toast.LENGTH_LONG).show() }\n'
+              '      } catch (e: Exception) {\n'
+              '        runOnUiThread { Toast.makeText(this@MainActivity, "Save failed: ${e.message}", Toast.LENGTH_LONG).show() }\n'
+              '      }\n'
+              '    }\n'
+              '  }\n'
+              '  @SuppressLint("SetJavaScriptEnabled")\n'
+              '  override fun onCreate(b: Bundle?) {\n'
+              '    super.onCreate(b)\n'
+              '    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)\n'
+              '    wv = WebView(this).apply {\n'
+              '      layoutParams = ViewGroup.LayoutParams(-1, -1)\n'
+              '      settings.javaScriptEnabled = true\n'
+              '      settings.domStorageEnabled = true\n'
+              '      settings.allowFileAccess = true\n'
+              '      settings.allowContentAccess = true\n'
+              '      settings.mediaPlaybackRequiresUserGesture = false\n'
+              '      settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW\n'
+              '      addJavascriptInterface(AndroidBridge(), "AndroidBridge")\n'
+              '      webViewClient = WebViewClient()\n'
+              '      webChromeClient = object : WebChromeClient() {\n'
+              '        override fun onShowFileChooser(v: WebView?, cb: ValueCallback<Array<Uri>>?, p: FileChooserParams?): Boolean {\n'
+              '          uploadCb?.onReceiveValue(null); uploadCb = cb\n'
+              '          val i = Intent(Intent.ACTION_GET_CONTENT).apply { addCategory(Intent.CATEGORY_OPENABLE); type = "video/" + "*" }\n'
+              '          startActivityForResult(Intent.createChooser(i, "Select Video"), 101)\n'
+              '          return true\n'
+              '        }\n'
+              '      }\n'
+              '    }\n'
+              '    setContentView(wv)\n'
+              '    wv.loadUrl("file:///android_asset/studio.html")\n'
+              '  }\n'
+              '  override fun onActivityResult(req: Int, res: Int, d: Intent?) {\n'
+              '    if (req == 101) { uploadCb?.onReceiveValue(if (res == RESULT_OK && d?.data != null) arrayOf(d.data!!) else null); uploadCb = null }\n'
+              '  }\n'
+              '  override fun onBackPressed() { if (wv.canGoBack()) wv.goBack() else super.onBackPressed() }\n'
+              '}\n'
+          )
+
+      - name: Assemble AbsoluteSmooth v2.0.0 Debug APK
+        run: |
+          wget -q https://services.gradle.org/distributions/gradle-8.5-bin.zip
+          unzip -q gradle-8.5-bin.zip
+          ./gradle-8.5/bin/gradle assembleDebug --no-daemon
+
+      - name: Upload AbsoluteSmooth v2.0.0 APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AbsoluteSmooth-v2.0.0-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Release AbsoluteSmooth v2.0.0 APK
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push'
+        with:
+          tag_name: v2.0.0
+          name: AbsoluteSmooth v2.0.0 (CapCut-Style Studio UI)
+          files: app/build/outputs/apk/debug/app-debug.apk
