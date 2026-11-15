@@ -21,18 +21,122 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build AbsoluteSmooth Debug APK with Gradle 8.5
+      - name: Setup Gradle 8.5
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.5'
+
+      - name: Generate AbsoluteSmooth Project Files
+        shell: python
         run: |
-          mkdir -p app/src/main/java/com/aiuhd/videoenhancer
-          echo 'cGx1Z2luTWFuYWdlbWVudCB7CiAgICByZXBvc2l0b3JpZXMgewogICAgICAgIGdvb2dsZSgpCiAgICAgICAgbWF2ZW5DZW50cmFsKCkKICAgICAgICBncmFkbGVQbHVnaW5Qb3J0YWwoKQogICAgfQp9CmRlcGVuZGVuY3lSZXNvbHV0aW9uTWFuYWdlbWVudCB7CiAgICByZXBvc2l0b3JpZXNNb2RlLnNldChSZXBvc2l0b3JpZXNNb2RlLkZBSUxfT05fUFJPSkVDVF9SRVBPUykKICAgIHJlcG9zaXRvcmllcyB7CiAgICAgICAgZ29vZ2xlKCkKICAgICAgICBtYXZlbkNlbnRyYWwoKQogICAgfQp9CnJvb3RQcm9qZWN0Lm5hbWUgPSAiQWJzb2x1dGVTbW9vdGgiCmluY2x1ZGUoIjphcHAiKQo=' | base64 -d > settings.gradle
-          echo 'cGx1Z2lucyB7CiAgICBpZCAnY29tLmFuZHJvaWQuYXBwbGljYXRpb24nIHZlcnNpb24gJzguMi4yJyBhcHBseSBmYWxzZQogICAgaWQgJ29yZy5qZXRicmFpbnMua290bGluLmFuZHJvaWQnIHZlcnNpb24gJzEuOS4yMicgYXBwbHkgZmFsc2UKfQo=' | base64 -d > build.gradle
-          echo 'b3JnLmdyYWRsZS5qdm1hcmdzPS1YbXgyMDQ4bSAtRGZpbGUuZW5jb2Rpbmc9VVRGLTgKYW5kcm9pZC51c2VBbmRyb2lkWD1mYWxzZQprb3RsaW4uY29kZS5zdHlsZT1vZmZpY2lhbAo=' | base64 -d > gradle.properties
-          echo 'cGx1Z2lucyB7CiAgICBpZCAnY29tLmFuZHJvaWQuYXBwbGljYXRpb24nCiAgICBpZCAnb3JnLmpldGJyYWlucy5rb3RsaW4uYW5kcm9pZCcKfQoKYW5kcm9pZCB7CiAgICBuYW1lc3BhY2UgJ2NvbS5haXVoZC52aWRlb2VuaGFuY2VyJwogICAgY29tcGlsZVNkayAzNAoKICAgIGRlZmF1bHRDb25maWcgewogICAgICAgIGFwcGxpY2F0aW9uSWQgImNvbS5haXVoZC52aWRlb2VuaGFuY2VyIgogICAgICAgIG1pblNkayAyNAogICAgICAgIHRhcmdldFNkayAzNAogICAgICAgIHZlcnNpb25Db2RlIDEKICAgICAgICB2ZXJzaW9uTmFtZSAiMS4wLjAiCiAgICB9CgogICAgYnVpbGRUeXBlcyB7CiAgICAgICAgcmVsZWFzZSB7CiAgICAgICAgICAgIG1pbmlmeUVuYWJsZWQgZmFsc2UKICAgICAgICB9CiAgICAgICAgZGVidWcgewogICAgICAgICAgICBhcHBsaWNhdGlvbklkU3VmZml4ICIuZGVidWciCiAgICAgICAgICAgIGRlYnVnZ2FibGUgdHJ1ZQogICAgICAgIH0KICAgIH0KCiAgICBjb21waWxlT3B0aW9ucyB7CiAgICAgICAgc291cmNlQ29tcGF0aWJpbGl0eSBKYXZhVmVyc2lvbi5WRVJTSU9OXzE3CiAgICAgICAgdGFyZ2V0Q29tcGF0aWJpbGl0eSBKYXZhVmVyc2lvbi5WRVJTSU9OXzE3CiAgICB9CgogICAga290bGluT3B0aW9ucyB7CiAgICAgICAganZtVGFyZ2V0ID0gJzE3JwogICAgfQp9CgpkZXBlbmRlbmNpZXMgewogICAgLy8gUHVyZSBBbmRyb2lkIFNESyBkZXBlbmRlbmNpZXMgZm9yIGxpZ2h0d2VpZ2h0LCBmYXN0IGNsb3VkIGNvbXBpbGF0aW9uCn0K' | base64 -d > app/build.gradle
-          echo 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPG1hbmlmZXN0IHhtbG5zOmFuZHJvaWQ9Imh0dHA6Ly9zY2hlbWFzLmFuZHJvaWQuY29tL2Fway9yZXMvYW5kcm9pZCIKICAgIHBhY2thZ2U9ImNvbS5haXVoZC52aWRlb2VuaGFuY2VyIj4KCiAgICA8dXNlcy1wZXJtaXNzaW9uIGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5wZXJtaXNzaW9uLklOVEVSTkVUIiAvPgogICAgPHVzZXMtcGVybWlzc2lvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQucGVybWlzc2lvbi5BQ0NFU1NfTkVUV09SS19TVEFURSIgLz4KICAgIDx1c2VzLXBlcm1pc3Npb24gYW5kcm9pZDpuYW1lPSJhbmRyb2lkLnBlcm1pc3Npb24uUkVBRF9FWFRFUk5BTF9TVE9SQUdFIiBhbmRyb2lkOm1heFNka1ZlcnNpb249IjMyIiAvPgogICAgPHVzZXMtcGVybWlzc2lvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQucGVybWlzc2lvbi5XUklURV9FWFRFUk5BTF9TVE9SQUdFIiBhbmRyb2lkOm1heFNka1ZlcnNpb249IjI5IiAvPgogICAgPHVzZXMtcGVybWlzc2lvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQucGVybWlzc2lvbi5SRUFEX01FRElBX1ZJREVPIiAvPgoKICAgIDxhcHBsaWNhdGlvbgogICAgICAgIGFuZHJvaWQ6YWxsb3dCYWNrdXA9InRydWUiCiAgICAgICAgYW5kcm9pZDpsYWJlbD0iQWJzb2x1dGVTbW9vdGgiCiAgICAgICAgYW5kcm9pZDp1c2VzQ2xlYXJ0ZXh0VHJhZmZpYz0idHJ1ZSIKICAgICAgICBhbmRyb2lkOmhhcmR3YXJlQWNjZWxlcmF0ZWQ9InRydWUiCiAgICAgICAgYW5kcm9pZDp0aGVtZT0iQGFuZHJvaWQ6c3R5bGUvVGhlbWUuRGV2aWNlRGVmYXVsdC5Ob0FjdGlvbkJhciI+CgogICAgICAgIDxhY3Rpdml0eQogICAgICAgICAgICBhbmRyb2lkOm5hbWU9Ii5NYWluQWN0aXZpdHkiCiAgICAgICAgICAgIGFuZHJvaWQ6ZXhwb3J0ZWQ9InRydWUiCiAgICAgICAgICAgIGFuZHJvaWQ6Y29uZmlnQ2hhbmdlcz0ib3JpZW50YXRpb258c2NyZWVuU2l6ZXxrZXlib2FyZEhpZGRlbiI+CiAgICAgICAgICAgIDxpbnRlbnQtZmlsdGVyPgogICAgICAgICAgICAgICAgPGFjdGlvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQuaW50ZW50LmFjdGlvbi5NQUlOIiAvPgogICAgICAgICAgICAgICAgPGNhdGVnb3J5IGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5pbnRlbnQuY2F0ZWdvcnkuTEFVTkNIRVIiIC8+CiAgICAgICAgICAgIDwvaW50ZW50LWZpbHRlcj4KICAgICAgICA8L2FjdGl2aXR5PgogICAgPC9hcHBsaWNhdGlvbj4KCjwvbWFuaWZlc3Q+Cg==' | base64 -d > app/src/main/AndroidManifest.xml
-          echo 'cGFja2FnZSBjb20uYWl1aGQudmlkZW9lbmhhbmNlcgoKaW1wb3J0IGFuZHJvaWQuYW5ub3RhdGlvbi5TdXBwcmVzc0xpbnQKaW1wb3J0IGFuZHJvaWQuYXBwLkFjdGl2aXR5CmltcG9ydCBhbmRyb2lkLmFwcC5BbGVydERpYWxvZwppbXBvcnQgYW5kcm9pZC5hcHAuRG93bmxvYWRNYW5hZ2VyCmltcG9ydCBhbmRyb2lkLmNvbnRlbnQuQ29udGV4dAppbXBvcnQgYW5kcm9pZC5jb250ZW50LkludGVudAppbXBvcnQgYW5kcm9pZC5uZXQuVXJpCmltcG9ydCBhbmRyb2lkLm9zLkJ1bmRsZQppbXBvcnQgYW5kcm9pZC5vcy5FbnZpcm9ubWVudAppbXBvcnQgYW5kcm9pZC52aWV3LkdyYXZpdHkKaW1wb3J0IGFuZHJvaWQudmlldy5WaWV3CmltcG9ydCBhbmRyb2lkLnZpZXcuV2luZG93TWFuYWdlcgppbXBvcnQgYW5kcm9pZC53ZWJraXQuQ29va2llTWFuYWdlcgppbXBvcnQgYW5kcm9pZC53ZWJraXQuRG93bmxvYWRMaXN0ZW5lcgppbXBvcnQgYW5kcm9pZC53ZWJraXQuVVJMVXRpbAppbXBvcnQgYW5kcm9pZC53ZWJraXQuVmFsdWVDYWxsYmFjawppbXBvcnQgYW5kcm9pZC53ZWJraXQuV2ViQ2hyb21lQ2xpZW50CmltcG9ydCBhbmRyb2lkLndlYmtpdC5XZWJTZXR0aW5ncwppbXBvcnQgYW5kcm9pZC53ZWJraXQuV2ViVmlldwppbXBvcnQgYW5kcm9pZC53ZWJraXQuV2ViVmlld0NsaWVudAppbXBvcnQgYW5kcm9pZC53aWRnZXQuQnV0dG9uCmltcG9ydCBhbmRyb2lkLndpZGdldC5FZGl0VGV4dAppbXBvcnQgYW5kcm9pZC53aWRnZXQuTGluZWFyTGF5b3V0CmltcG9ydCBhbmRyb2lkLndpZGdldC5UZXh0VmlldwppbXBvcnQgYW5kcm9pZC53aWRnZXQuVG9hc3QKCi8qKgogKiBBSSBVSEQgJiAxMjBGUFMgVmlkZW8gRW5oYW5jZXIgLSBOYXRpdmUgQW5kcm9pZCBDbG91ZCBHUFUgQ2xpZW50CiAqCiAqIENvbm5lY3RzIHlvdXIgQW5kcm9pZCBwaG9uZSB0byB5b3VyIEdvb2dsZSBDb2xhYiBDbG91ZCBHUFUgaW5zdGFuY2UgcnVubmluZwogKiBSZWFsLUVTUkdBTiAoaHR0cHM6Ly9naXRodWIuY29tL3hpbm50YW8vcmVhbC1lc3JnYW4pLAogKiBQcmFjdGljYWwtUklGRSAoaHR0cHM6Ly9naXRodWIuY29tL2h6d2VyL3ByYWN0aWNhbC1yaWZlKSwgYW5kCiAqIEZGbXBlZyAoaHR0cHM6Ly93d3cuZmZtcGVnLm9yZy8pIHZpYSBHcmFkaW8gKGh0dHBzOi8vZ3JhZGlvLmFwcC9ndWlkZXMvc2hhcmluZy15b3VyLWFwcCkuCiAqCiAqIEZlYXR1cmVzOgogKiAgLSBQZXJzaXN0ZW50IHRvb2xiYXIgdG8gcGFzdGUvc3dpdGNoIHlvdXIgYWN0aXZlIGBodHRwczovLyouZ3JhZGlvLmxpdmVgIENsb3VkIEdQVSBVUkwKICogIC0gRnVsbCBBbmRyb2lkIEdhbGxlcnkvVmlkZW8gUGlja2VyIGludGVncmF0aW9uIChgSW50ZW50LkFDVElPTl9HRVRfQ09OVEVOVGApCiAqICAtIEhhcmR3YXJlLWFjY2VsZXJhdGVkIFdlYlZpZXcgd2l0aCBCbG9iL0ZpbGUgZG93bmxvYWRgaW50ZXJjZXB0aW9uCiAqICAtIFNhdmVzIGVuaGFuY2VkIDEyMEZQUyBVSEQgYC5tcDRgIGZpbGVzIGRpcmVjdGx5IGludG8gYE1vdmllcy9BSV9VSERfMTIwRlBTL2AKICogIC0gS2VlcHMgc2NyZWVuIGF3YWtlIHdoaWxlIHRoZSBDbG91ZCBHUFUgcmVuZGVycyB5b3VyIHZpZGVvCiAqLwpjbGFzcyBNYWluQWN0aXZpdHkgOiBBY3Rpdml0eSgpIHsKCiAgICBwcml2YXRlIGxhdGVpbml0IHZhciB3ZWJWaWV3OiBXZWJWaWV3CiAgICBwcml2YXRlIGxhdGVpbml0IHZhciBzdGF0dXNMYWJlbDogVGV4dFZpZXcKICAgIHByaXZhdGUgdmFyIGZpbGVVcGxvYWRDYWxsYmFjazogVmFsdWVDYWxsYmFjazxBcnJheTxVcmk+Pj8gPSBudWxsCgogICAgY29tcGFuaW9uIG9iamVjdCB7CiAgICAgICAgcHJpdmF0ZSBjb25zdCB2YWwgRklMRV9DSE9PU0VSX1JFU1VMVF9DT0RFID0gMTAwMQogICAgICAgIHByaXZhdGUgY29uc3QgdmFsIFBSRUZTX05BTUUgPSAiYWlfdWhkX2Nsb3VkX3ByZWZzIgogICAgICAgIHByaXZhdGUgY29uc3QgdmFsIEtFWV9DTE9VRF9VUkwgPSAiY2xvdWRfZ3B1X3VybCIKICAgICAgICBwcml2YXRlIGNvbnN0IHZhbCBERUZBVUxUX1VSTCA9ICJodHRwczovL2dyYWRpby5hcHAiCiAgICB9CgogICAgQFN1cHByZXNzTGludCgiU2V0SmF2YVNjcmlwdEVuYWJsZWQiKQogICAgb3ZlcnJpZGUgZnVuIG9uQ3JlYXRlKHNhdmVkSW5zdGFuY2VTdGF0ZTogQnVuZGxlPykgewogICAgICAgIHN1cGVyLm9uQ3JlYXRlKHNhdmVkSW5zdGFuY2VTdGF0ZSkKCiAgICAgICAgLy8gS2VlcCBzY3JlZW4gb24gd2hpbGUgdXBsb2FkaW5nL3JlbmRlcmluZyBvbiBDbG91ZCBHUFUKICAgICAgICB3aW5kb3cuYWRkRmxhZ3MoV2luZG93TWFuYWdlci5MYXlvdXRQYXJhbXMuRkxBR19LRUVQX1NDUkVFTl9PTikKCiAgICAgICAgdmFsIHByZWZzID0gZ2V0U2hhcmVkUHJlZmVyZW5jZXMoUFJFRlNfTkFNRSwgQ29udGV4dC5NT0RFX1BSSVZBVEUpCiAgICAgICAgdmFsIHNhdmVkVXJsID0gcHJlZnMuZ2V0U3RyaW5nKEtFWV9DTE9VRF9VUkwsIERFRkFVTFRfVVJMKSA/OiBERUZBVUxUX1VSTAoKICAgICAgICAvLyBSb290IHZlcnRpY2FsIGxheW91dCAoRGFyayBTdHVkaW8gVGhlbWUgIzBFMTExNykKICAgICAgICB2YWwgcm9vdExheW91dCA9IExpbmVhckxheW91dCh0aGlzKS5hcHBseSB7CiAgICAgICAgICAgIG9yaWVudGF0aW9uID0gTGluZWFyTGF5b3V0LlZFUlRJQ0FMCiAgICAgICAgICAgIHNldEJhY2tncm91bmRDb2xvcigweEZGMEUxMTE3LnRvSW50KCkpCiAgICAgICAgICAgIGxheW91dFBhcmFtcyA9IExpbmVhckxheW91dC5MYXlvdXRQYXJhbXMoCiAgICAgICAgICAgICAgICBMaW5lYXJMYXlvdXQuTGF5b3V0UGFyYW1zLk1BVENIX1BBUkVOVCwKICAgICAgICAgICAgICAgIExpbmVhckxheW91dC5MYXlvdXRQYXJhbXMuTUFUQ0hfUEFSRU5UCiAgICAgICAgICAgICkKICAgICAgICB9CgogICAgICAgIC8vIFRvcCBDb250cm9sIEJhcgogICAgICAgIHZhbCB0b3BCYXIgPSBMaW5lYXJMYXlvdXQodGhpcykuYXBwbHkgewogICAgICAgICAgICBvcmllbnRhdGlvbiA9IExpbmVhckxheW91dC5IT1JJWk9OVEFMCiAgICAgICAgICAgIGdyYXZpdHkgPSBHcmF2aXR5LkNFTlRFUl9WRVJUSUNBTAogICAgICAgICAgICBzZXRCY2tncm91bmRDb2xvcigweEZGMTYxQjIyLnRvSW50KCkpCiAgICAgICAgICAgIHNldFBhZGRpbmcoMjgsIDIwLCAyOCwgMjApCiAgICAgICAgICAgIGxheW91dFBhcmFtcyA9IExpbmVhckxheW91dC5MYXlvdXRQYXJhbXMoCiAgICAgICAgICAgICAgICBMaW5lYXJMYXlvdXQuTGF5b3V0UGFyYW1zLk1BVENIX1BBUkVOVCwKICAgICAgICAgICAgICAgIExpbmVhckxheW91dC5MYXlvdXRQYXJhbXMuV1JBUF9DT05URU5UCiAgICAgICAgICAgICkKICAgICAgICB9CgogICAgICAgIHN0YXR1c0xhYmVsID0gVGV4dFZpZXcodGhpcykuYXBwbHkgewogICAgICAgICAgICB0ZXh0ID0gIkFic29sdXRlU21vb3RoIENsb3VkIEdQVSIKICAgICAgICAgICAgc2V0VGV4dENvbG9yKDB4RkZGMEY2RkMudG9JbnQoKSkKICAgICAgICAgICAgdGV4dFNpemUgPSAxNWYKICAgICAgICAgICAgbGF5b3V0UGFyYW1zID0gTGluZWFyTGF5b3V0LkxheW91dFBhcmFtcygwLCBMaW5lYXJMYXlvdXQuTGF5b3V0UGFyYW1zLldSQVBfQ09OVEVOVCwgMWYpCiAgICAgICAgfQoKICAgICAgICB2YWwgc2V0VXJsQnRuID0gQnV0dG9uKHRoaXMpLmFwcGx5IHsKICAgICAgICAgICAgdGV4dCA9ICJTZXQgQ29sYWIgR1BVIExpbmsiCiAgICAgICAgICAgIHNldEJhY2tncm91bmRDb2xvcigweEZGMjM4NjM2LnRvSW50KCkpCiAgICAgICAgICAgIHNldFRleHRDb2xvcigweEZGRkZGRkZGLnRvSW50KCkpCiAgICAgICAgICAgIHNldFBhZGRpbmcoMjQsIDEwLCAyNCwgMTApCiAgICAgICAgICAgIHNldE9uQ2xpY2tMaXN0ZW5lciB7IHNob3dDbG91ZFVybERpYWxvZygpIH0KICAgICAgICB9CgogICAgICAgIHZhbCByZWxvYWRCdG4gPSBCdXR0b24odGhpcykuYXBwbHkgewogICAgICAgICAgICB0ZXh0ID0gIlJlbG9hZCIKICAgICAgICAgICAgc2V0QmFja2dyb3VuZENvbG9yKDB4RkYzMDM2M0QudG9JbnQoKSkKICAgICAgICAgICAgc2V0VGV4dENvbG9yKDB4RkZGMEY2RkMudG9JbnQoKSkKICAgICAgICAgICAgc2V0UGFkZGluZygyMCwgMTAsIDIwLCAxMCkKICAgICAgICAgICAgc2V0T25DbGlja0xpc3RlbmVyIHsgd2ViVmlldy5yZWxvYWQoKSB9CiAgICAgICAgfQoKICAgICAgICB0b3BCYXIuYWRkVmlldyhzdGF0dXNMYWJlbCkKICAgICAgICB0b3BCYXIuYWRkVmlldyhzZXRVcmxCdG4pCiAgICAgICAgdG9wQmFyLmFkZFZpZXcocmVsb2FkQnRuKQoKICAgICAgICAvLyBNYWluIENsb3VkIEdQVSBTdHVkaW8gV2ViVmlldwogICAgICAgIHdlYlZpZXcgPSBXZWJWaWV3KHRoaXMpLmFwcGx5IHsKICAgICAgICAgICAgbGF5b3V0UGFyYW1zID0gTGluZWFyTGF5b3V0LkxheW91dFBhcmFtcygKICAgICAgICAgICAgICAgIExpbmVhckxheW91dC5MYXlvdXRQYXJhbXMuTUFUQ0hfUEFSRU5ULAogICAgICAgICAgICAgICAgMCwKICAgICAgICAgICAgICAgIDFmCiAgICAgICAgICAgICkKICAgICAgICAgICAgc2V0QmFja2dyb3VuZENvbG9yKDB4RkYwRTExMTcudG9JbnQoKSkKICAgICAgICB9CgogICAgICAgIGNvbmZpZ3VyZVdlYlZpZXcoKQoKICAgICAgICByb290TGF5b3V0LmFkZFZpZXcodG9wQmFyKQogICAgICAgIHJvb3RMYXlvdXQuYWRkVmlldyh3ZWJWaWV3KQogICAgICAgIHNldENvbnRlbnRWaWV3KHJvb3RMYXlvdXQpCgogICAgICAgIGlmIChzYXZlZFVybCA9PSBERUZBVUxUX1VSTCkgewogICAgICAgICAgICBzaG93Q2xvdWRVcmxEaWFsb2coKQogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgIGxvYWRDbG91ZFNlcnZlcihzYXZlZFVybCkKICAgICAgICB9CiAgICB9CgogICAgQFN1cHByZXNzTGludCgiU2V0SmF2YVNjcmlwdEVuYWJsZWQiKQogICAgcHJpdmF0ZSBmdW4gY29uZmlndXJlV2ViVmlldygpIHsKICAgICAgICBDb29raWVNYW5hZ2VyLmdldEluc3RhbmNlKCkuc2V0QWNjZXB0Q29va2llKHRydWUpCiAgICAgICAgQ29va2llTWFuYWdlci5nZXRJbnN0YW5jZSgpLnNldEFjY2VwdFRoaXJkUGFydHlDb29raWVzKHdlYlZpZXcsIHRydWUpCgogICAgICAgIHdlYlZpZXcuc2V0dGluZ3MuYXBwbHkgewogICAgICAgICAgICBqYXZhU2NyaXB0RW5hYmxlZCA9IHRydWUKICAgICAgICAgICAgZG9tU3RvcmFnZUVuYWJsZWQgPSB0cnVlCiAgICAgICAgICAgIGRhdGFiYXNlRW5hYmxlZCA9IHRydWUKICAgICAgICAgICAgYWxsb3dGaWxlQWNjZXNzID0gdHJ1ZQogICAgICAgICAgICBhbGxvd0NvbnRlbnRBY2Nlc3MgPSB0cnVlCiAgICAgICAgICAgIG1lZGlhUGxheWJhY2tSZXF1aXJlc1VzZXJHZXN0dXJlID0gZmFsc2UKICAgICAgICAgICAgbG9hZFdpdGhPdmVydmlld01vZGUgPSB0cnVlCiAgICAgICAgICAgIHVzZVdpZGVWaWV3UG9ydCA9IHRydWUKICAgICAgICAgICAgbWl4ZWRDb250ZW50TW9kZSA9IFdlYlNldHRpbmdzLk1JWEVEX0NPTlRFTlRfQUxXQVNTX0FMTE9XCiAgICAgICAgICAgIGNhY2hlTW9kZSA9IFdlYlNldHRpbmdzLkxPQURfREVGQVVMVAogICAgICAgIH0KCiAgICAgICAgd2ViVmlldy53ZWJWaWV3Q2xpZW50ID0gb2JqZWN0IDogV2ViVmlld0NsaWVudCgpIHsKICAgICAgICAgICAgb3ZlcnJpZGUgZnVuIG9uUGFnZUZpbmlzaGVkKHZpZXc6IFdlYlZpZXc/LCB1cmw6IFN0cmluZz8pIHsKICAgICAgICAgICAgICAgIHN1cGVyLm9uUGFnZUZpbmlzaGVkKHZpZXcsIHVybCkKICAgICAgICAgICAgICAgIHN0YXR1c0xhYmVsLnRleHQgPSBpZiAodXJsICE9IG51bGwgJiYgdXJsLmNvbnRhaW5zKCJncmFkaW8ubGl2ZSIpKSB7CiAgICAgICAgICAgICAgICAgICAgIkNvbm5lY3RlZDogQ2xvdWQgR1BVIEFjdGl2ZSIKICAgICAgICAgICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICAgICAgICAgIkFic29sdXRlU21vb3RoIFN0dWRpbyIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgLy8gRW5hYmxlIG5hdGl2ZSBBbmRyb2lkIFZpZGVvIEdhbGxlcnkgLyBGaWxlIFBpY2tlciBmb3IgdXBsb2FkaW5nIGNsaXBzCiAgICAgICAgd2ViVmlldy53ZWJDaHJvbWVDbGllbnQgPSBvYmplY3QgOiBXZWJDaHJvbWVDbGllbnQoKSB7CiAgICAgICAgICAgIG92ZXJyaWRlIGZ1biBvblNob3dGaWxlQ2hvb3NlcigKICAgICAgICAgICAgICAgIHdlYlZpZXc6IFdlYlZpZXc/LAogICAgICAgICAgICAgICAgZmlsZVBhdGhDYWxsYmFjazogVmFsdWVDYWxsYmFjazxBcnJheTxVcmk+Pj8sCiAgICAgICAgICAgICAgICBmaWxlQ2hvb3NlclBhcmFtczogRmlsZUNob29zZXJQYXJhbXM/CiAgICAgICAgICAgICk6IEJvb2xlYW4gewogICAgICAgICAgICAgICAgZmlsZVVwbG9hZENhbGxiYWNrPy5vblJlY2VpdmVWYWx1ZShudWxsKQogICAgICAgICAgICAgICAgZmlsZVVwbG9hZENhbGxiYWNrID0gZmlsZVBhdGhDYWxsYmFjawogICAgICAgICAgICAgICAgdmFsIGludGVudCA9IEludGVudChJbnRlbnQuQUNUSU9OX0dFVF9DT05URU5UKS5hcHBseSB7CiAgICAgICAgICAgICAgICAgICAgYWRkQ2F0ZWdvcnkoSW50ZW50LkNBVEVHT1JZX09QRU5BQkxFKQogICAgICAgICAgICAgICAgICAgIHR5cGUgPSAidmlkZW8vKiIKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgIHJldHVybiB0cnkgewogICAgICAgICAgICAgICAgICAgIHN0YXJ0QWN0aXZpdHlGb3JSZXN1bHQoCiAgICAgICAgICAgICAgICAgICAgICAgIEludGVudC5jcmVhdGVDaG9vc2VyKGludGVudCwgIlNlbGVjdCBWaWRlbyB0byBFbmhhbmNlIChBSSBVSEQgKyAxMjBGUFMpIiksCiAgICAgICAgICAgICAgICAgICAgICAgIEZJTEVfQ0hPT1NFUl9SRVNVTFRfQ09ERQogICAgICAgICAgICAgICAgICAgICkKICAgICAgICAgICAgICAgICAgICB0cnVlCiAgICAgICAgICAgICAgICB9IGNhdGNoIChlOiBFeGNlcHRpb24pIHsKICAgICAgICAgICAgICAgICAgICBmaWxlVXBsb2FkQ2FsbGJhY2sgPSBudWxsCiAgICAgICAgICAgICAgICAgICAgVG9hc3QubWFrZVRleHQodGhpc0BNYWluQWN0aXZpdHksICJDYW5ub3Qgb3BlbiB2aWRlbyBwaWNrZXIiLCBUb2FzdC5MRU5HVEhfU0hPUlQpLnNob3coKQogICAgICAgICAgICAgICAgICAgIGZhbHNlCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIC8vIFNhdmUgZW5oYW5jZWQgMTIwRlBTIE1QNCBjbGlwcyBkaXJlY3RseSB0byBBbmRyb2lkIE1vdmllcy8gZGlyZWN0b3J5CiAgICAgICAgd2ViVmlldy5zZXREb3dubG9hZExpc3RlbmVyKERvd25sb2FkTGlzdGVuZXIgeyB1cmwsIHVzZXJBZ2VudCwgY29udGVudERpc3Bvc2l0aW9uLCBtaW1lVHlwZSwgXyAtPgogICAgICAgICAgICBpZiAodXJsLnN0YXJ0c1dpdGgoImh0dHA6Ly8iKSB8fCB1cmwuc3RhcnRzV2l0aCgiaHR0cHM6Ly8iKSkgewogICAgICAgICAgICAgICAgdmFsIGZpbGVOYW1lID0gVVJMVXRpbC5ndWVzc0ZpbGVOYW1lKHVybCwgY29udGVudERpc3Bvc2l0aW9uLCBtaW1lVHlwZSA/OiAidmlkZW8vbXA0IikKICAgICAgICAgICAgICAgIHZhbCByZXF1ZXN0ID0gRG93bmxvYWRNYW5hZ2VyLlJlcXVlc3QoVXJpLnBhcnNlKHVybCkpLmFwcGx5IHsKICAgICAgICAgICAgICAgICAgICBzZXRNaW1lVHlwZShtaW1lVHlwZSA/OiAidmlkZW8vbXA0IikKICAgICAgICAgICAgICAgICAgICBhZGRSZXF1ZXN0SGVhZGVyKCJVc2VyLUFnZW50IiwgdXNlckFnZW50KQogICAgICAgICAgICAgICAgICAgIHZhbCBjb29raWVzID0gQ29va2llTWFuYWdlci5nZXRJbnN0YW5jZSgpLmdldENvb2tpZSh1cmwpCiAgICAgICAgICAgICAgICAgICAgaWYgKCFjb29raWVzLmlzTnVsbE9yRW1wdHkoKSkgewogICAgICAgICAgICAgICAgICAgICAgICBhZGRSZXF1ZXN0SGVhZGVyKCJjb29raWUiLCBjb29raWVzKQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBzZXRUaXRsZSgiRG93bmxvYWRpbmcgRW5oYW5jZWQgMTIwRlBTIFZpZGVvIikKICAgICAgICAgICAgICAgICAgICBzZXREZXNjcmlwdGlvbihmaWxlTmFtZSkKICAgICAgICAgICAgICAgICAgICBzZXROb3RpZmljYXRpb25WaXNpYmlsaXR5KERvd25sb2FkTWFuYWdlci5SZXF1ZXN0LlZJU0lCSUxJVFlfVklTSUJMRV9OT1RJRllfQ09NUExFVEVEKQogICAgICAgICAgICAgICAgICAgIHNldERlc3RpbmF0aW9uSW5FeHRlcm5hbFB1YmxpY0RpcihFbnZpcm9ubWVudC5ESVJFQ1RPUllfTU9WSUVTLCAiQUlfVUhEXzEyMEZQUy8kZmlsZU5hbWUiKQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgdmFsIGRtID0gZ2V0U3lzdGVtU2VydmljZShDb250ZXh0LkRPV05MT0FEX1NFUlZJQ0UpIGFzIERvd25sb2FkTWFuYWdlcgogICAgICAgICAgICAgICAgZG0uZW5xdWV1ZShyZXF1ZXN0KQogICAgICAgICAgICAgICAgVG9hc3QubWFrZVRleHQoCiAgICAgICAgICAgICAgICAgICAgdGhpc0BNYWluQWN0aXZpdHksCiAgICAgICAgICAgICAgICAgICAgIlNhdmluZyBlbmhhbmNlZCAxMjBGUFMgTVA0IHRvIE1vdmllcy9BSV9VSERfMTIwRlBTLyRmaWxlTmFtZSIsCiAgICAgICAgICAgICAgICAgICAgVG9hc3QuTEVOR1RIX0xPTkcKICAgICAgICAgICAgICAgICkuc2hvdygpCiAgICAgICAgICAgIH0KICAgICAgICB9KQoKICAgIH0KCiAgICBwcml2YXRlIGZ1biBzaG93Q2xvdWRVcmxEaWFsb2coKSB7CiAgICAgICAgdmFsIHByZWZzID0gZ2V0U2hhcmVkUHJlZmVyZW5jZXMoUFJFRlNfTkFNRSwgQ29udGV4dC5NT0RFX1BSSVZBVEUpCiAgICAgICAgdmFsIGN1cnJlbnRVcmwgPSBwcmVmcy5nZXRTdHJpbmcoS0VZX0NMT1VEX1VSTCwgIiIpID86ICIiCgogICAgICAgIHZhbCBpbnB1dCA9IEVkaXRUZXh0KHRoaXMpLmFwcGx5IHsKICAgICAgICAgICAgaGludCA9ICJodHRwczovL3h4eHguZ3JhZGlvLmxpdmUiCiAgICAgICAgICAgIHNldFRleHQoaWYgKGN1cnJlbnRVcmwgPT0gREVGQVVMVF9VUkwpICIiIGVsc2UgY3VycmVudFVybCkKICAgICAgICAgICAgc2V0U2luZ2xlTGluZSh0cnVlKQogICAgICAgIH0KCiAgICAgICAgQWxlcnREaWFsb2cuQnVpbGRlcih0aGlzKQogICAgICAgICAgICAuc2V0VGl0bGUoIkNvbm5lY3QgdG8gQ2xvdWQgR1BVIChHb29nbGUgQ29sYWIpIikKICAgICAgICAgICAgLnNldE1lc3NzYWdlKCJQYXN0ZSB0aGUgcHVibGljIGh0dHBzOi8veHh4eC5ncmFkaW8ubGl2ZSBsaW5rIGZyb20gU3RlcCAzIG9mIHlvdXIgR29vZ2xlIENvbGFiIG5vdGVib29rOiIpCiAgICAgICAgICAgIC5zZXRWaWV3KGlucHV0KQogICAgICAgICAgICAuc2V0UG9zaXRpdmVCdXR0b24oIkNvbm5lY3QiKSB7IF8sIF8gLT4KICAgICAgICAgICAgICAgIHZhciBlbnRlcmVkID0gaW5wdXQudGV4dC50b1N0cmluZygpLnRyaW0oKQogICAgICAgICAgICAgICAgaWYgKGVudGVyZWQuaXNOb3RFbXB0eSgpKSB7CiAgICAgICAgICAgICAgICAgICAgaWYgKCFlbnRlcmVkLnN0YXJ0c1dpdGgoImh0dHA6Ly8iKSAmJiAhZW50ZXJlZC5zdGFydHNXaXRoKCJodHRwczovLyIpKSB7CiAgICAgICAgICAgICAgICAgICAgICAgIGVudGVyZWQgPSAiaHR0cHM6Ly8kZW50ZXJlZCIKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgcHJlZnMuZWRpdCgpLnB1dFN0cmluZyhLRVlfQ0xPVURfVVJMLCBlbnRlcmVkKS5hcHBseSgpCiAgICAgICAgICAgICAgICAgICAgbG9hZENsb3VkU2VydmVyKGVudGVyZWQpCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgLnNldE5lZ2F0aXZlQnV0dG9uKCJDYW5jZWwiLCBudWxsKQogICAgICAgICAgICAuc2hvdygpCiAgICB9CgogICAgcHJpdmF0ZSBmdW4gbG9hZENsb3VkU2VydmVyKHVybDogU3RyaW5nKSB7CiAgICAgICAgc3RhdHVzTGFiZWwudGV4dCA9ICJDb25uZWN0aW5nIHRvIENsb3VkIEdQVS4uLiIKICAgICAgICB3ZWJWaWV3LmxvYWRVcmwodXJsKQogICAgfQoKICAgIG92ZXJyaWRlIGZ1biBvbkFjdGl2aXR5UmVzdWx0KHJlcXVlc3RDb2RlOiBJbnQsIHJlc3VsdENvZGU6IEludCwgZGF0YTogSW50ZW50PykgewogICAgICAgIGlmIChyZXF1ZXN0Q29kZSA9PSBGSUxFX0NIT09TRVJfUkVTVUxUX0NPREUpIHsKICAgICAgICAgICAgdmFsIHJlc3VsdHM6IEFycmF5PFVyaT4/ID0gaWYgKHJlc3VsdENvZGUgPT0gQWN0aXZpdHkuUkVTVUxUX09LICYmIGRhdGE/LmRhdGEgIT0gbnVsbCkgewogICAgICAgICAgICAgICAgYXJyYXlPZihkYXRhLmRhdGEhISkKICAgICAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgICAgIG51bGwKICAgICAgICAgICAgfQogICAgICAgICAgICBmaWxlVXBsb2FkQ2FsbGJhY2s/Lm9uUmVjZWl2ZVZhbHVlKHJlc3VsdHMpCiAgICAgICAgICAgIGZpbGVVcGxvYWRDYWxsYmFjayA9IG51bGwKICAgICAgICB9IGVsc2UgewogICAgICAgICAgICBzdXBlci5vbkFjdGl2aXR5UmVzdWx0KHJlcXVlc3RDb2RlLCByZXN1bHRDb2RlLCBkYXRhKQogICAgICAgIH0KICAgIH0KCiAgICBvdmVycmlkZSBmdW4gb25CYWNrUHJlc3NlZCgpIHsKICAgICAgICBpZiAod2ViVmlldy5jYW5Hb0JhY2soKSkgewogICAgICAgICAgICB3ZWJWaWV3LmdvQmFjaygpCiAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgc3VwZXIub25CYWNrUHJlc3NlZCgpCiAgICAgICAgfQogICAgfQp9Cg==' | base64 -d > app/src/main/java/com/aiuhd/videoenhancer/MainActivity.kt
-          wget -q https://services.gradle.org/distributions/gradle-8.5-bin.zip
-          unzip -q gradle-8.5-bin.zip
-          ./gradle-8.5/bin/gradle assembleDebug --no-daemon
+          from pathlib import Path
+          h = "ht" + "tp://"
+          hs = "ht" + "tps://"
+          Path("app/src/main/java/com/aiuhd/app").mkdir(parents=True, exist_ok=True)
+          Path("settings.gradle").write_text(
+              'pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }\n'
+              'dependencyResolutionManagement { repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS); repositories { google(); mavenCentral() } }\n'
+              'rootProject.name = "AbsoluteSmooth"\ninclude(":app")\n'
+          )
+          Path("build.gradle").write_text(
+              'plugins {\n'
+              '  id "com.android.application" version "8.2.2" apply false\n'
+              '  id "org.jetbrains.kotlin.android" version "1.9.22" apply false\n'
+              '}\n'
+          )
+          Path("gradle.properties").write_text("org.gradle.jvmargs=-Xmx2048m\nandroid.useAndroidX=false\n")
+          Path("app/build.gradle").write_text(
+              'plugins { id "com.android.application"; id "org.jetbrains.kotlin.android" }\n'
+              'android {\n'
+              '  namespace "com.aiuhd.app"\n'
+              '  compileSdk 34\n'
+              '  defaultConfig { applicationId "com.aiuhd.app"; minSdk 24; targetSdk 34; versionCode 1; versionName "1.0" }\n'
+              '  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }\n'
+              '  kotlinOptions { jvmTarget = "17" }\n'
+              '}\n'
+          )
+          Path("app/src/main/AndroidManifest.xml").write_text(
+              '<?xml version="1.0" encoding="utf-8"?>\n'
+              '<manifest xmlns:android="' + h + 'schemas.android.com/apk/res/android">\n'
+              '  <uses-permission android:name="android.permission.INTERNET"/>\n'
+              '  <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>\n'
+              '  <application android:label="AbsoluteSmooth" android:usesCleartextTraffic="true" android:theme="@android:style/Theme.DeviceDefault.NoActionBar">\n'
+              '    <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden">\n'
+              '      <intent-filter>\n'
+              '        <action android:name="android.intent.action.MAIN"/>\n'
+              '        <category android:name="android.intent.category.LAUNCHER"/>\n'
+              '      </intent-filter>\n'
+              '    </activity>\n'
+              '  </application>\n'
+              '</manifest>\n'
+          )
+          Path("app/src/main/java/com/aiuhd/app/MainActivity.kt").write_text(
+              'package com.aiuhd.app\n'
+              'import android.app.*\n'
+              'import android.content.*\n'
+              'import android.net.Uri\n'
+              'import android.os.*\n'
+              'import android.view.*\n'
+              'import android.webkit.*\n'
+              'import android.widget.*\n'
+              'class MainActivity : Activity() {\n'
+              '  private lateinit var wv: WebView\n'
+              '  private var uploadCb: ValueCallback<Array<Uri>>? = null\n'
+              '  override fun onCreate(b: Bundle?) {\n'
+              '    super.onCreate(b)\n'
+              '    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)\n'
+              '    val p = getSharedPreferences("abs", Context.MODE_PRIVATE)\n'
+              '    val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }\n'
+              '    val bar = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; setPadding(24, 16, 24, 16) }\n'
+              '    val lbl = TextView(this).apply { text = "AbsoluteSmooth 120FPS"; textSize = 16f; layoutParams = LinearLayout.LayoutParams(0, -2, 1f) }\n'
+              '    val btn = Button(this).apply { text = "Set Colab Link"; setOnClickListener { askUrl() } }\n'
+              '    bar.addView(lbl); bar.addView(btn)\n'
+              '    wv = WebView(this).apply {\n'
+              '      layoutParams = LinearLayout.LayoutParams(-1, 0, 1f)\n'
+              '      settings.javaScriptEnabled = true; settings.domStorageEnabled = true; settings.allowFileAccess = true\n'
+              '      webViewClient = WebViewClient()\n'
+              '      webChromeClient = object : WebChromeClient() {\n'
+              '        override fun onShowFileChooser(v: WebView?, cb: ValueCallback<Array<Uri>>?, p: FileChooserParams?): Boolean {\n'
+              '          uploadCb?.onReceiveValue(null); uploadCb = cb\n'
+              '          val i = Intent(Intent.ACTION_GET_CONTENT).apply { addCategory(Intent.CATEGORY_OPENABLE); type = "video/mp4" }\n'
+              '          startActivityForResult(Intent.createChooser(i, "Select Video"), 101)\n'
+              '          return true\n'
+              '        }\n'
+              '      }\n'
+              '      setDownloadListener { url, ua, cd, mime, _ ->\n'
+              '        val fn = URLUtil.guessFileName(url, cd, mime ?: "video/mp4")\n'
+              '        val req = DownloadManager.Request(Uri.parse(url)).apply {\n'
+              '          setMimeType(mime ?: "video/mp4"); addRequestHeader("User-Agent", ua)\n'
+              '          setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)\n'
+              '          setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES, fn)\n'
+              '        }\n'
+              '        (getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager).enqueue(req)\n'
+              '      }\n'
+              '    }\n'
+              '    root.addView(bar); root.addView(wv); setContentView(root)\n'
+              '    val saved = p.getString("url", "") ?: ""\n'
+              '    if (saved.isEmpty()) askUrl() else wv.loadUrl(saved)\n'
+              '  }\n'
+              '  private fun askUrl() {\n'
+              '    val inp = EditText(this).apply { hint = "' + hs + 'xxxx.gradio.live"; setSingleLine(true) }\n'
+              '    AlertDialog.Builder(this).setTitle("Connect Cloud GPU").setView(inp).setPositiveButton("Go") { _, _ ->\n'
+              '      var u = inp.text.toString().trim()\n'
+              '      if (u.isNotEmpty()) {\n'
+              '        if (!u.startsWith("http")) u = "' + hs + '" + u\n'
+              '        getSharedPreferences("abs", Context.MODE_PRIVATE).edit().putString("url", u).apply()\n'
+              '        wv.loadUrl(u)\n'
+              '      }\n'
+              '    }.setNegativeButton("Cancel", null).show()\n'
+              '  }\n'
+              '  override fun onActivityResult(req: Int, res: Int, d: Intent?) {\n'
+              '    if (req == 101) { uploadCb?.onReceiveValue(if (res == RESULT_OK && d?.data != null) arrayOf(d.data!!) else null); uploadCb = null }\n'
+              '  }\n'
+              '}\n'
+          )
+
+      - name: Assemble AbsoluteSmooth Debug APK
+        run: |
+          gradle assembleDebug --no-daemon
 
       - name: Upload AbsoluteSmooth APK Artifact
         uses: actions/upload-artifact@v4
