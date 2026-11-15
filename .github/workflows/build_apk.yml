@@ -36,7 +36,11 @@ jobs:
         with:
           packages: 'platform-tools'
 
-      - name: Assemble AbsoluteSmooth Debug APK
+       - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4 
+        with:
+        gradle-version: '8.7'
+     - name: Assemble AbsoluteSmooth Debug APK
         run: |
           gradle assembleDebug --no-daemon
 
