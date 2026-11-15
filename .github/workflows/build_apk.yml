@@ -32,7 +32,9 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
 
       - name: Assemble AbsoluteSmooth Debug APK
         run: |
@@ -43,3 +45,10 @@ jobs:
         with:
           name: AbsoluteSmooth-APK
           path: app/build/outputs/apk/debug/app-debug.apk
+      - name: Release AbsoluteSmooth APK
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: AbsoluteSmooth v1.0.0
+          files: app/build/outputs/apk/debug/app-debug.apk
